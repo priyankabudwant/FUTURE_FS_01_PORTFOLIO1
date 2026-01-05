@@ -14,72 +14,85 @@ const navItems = [
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.screenY > 10);
+      const currentScrollY = window.scrollY;
+
+      // show navbar at top
+      if (currentScrollY < 50) {
+        setIsVisible(true);
+      } 
+      // scrolling down → hide
+      else if (currentScrollY > lastScrollY) {
+        setIsVisible(false);
+      } 
+      // scrolling up → show
+      else {
+        setIsVisible(true);
+      }
+
+      setIsScrolled(currentScrollY > 10);
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
+
   return (
     <nav
       className={cn(
-        "fixed w-full z-40 transition-all duration-300",
-        isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
+        "fixed top-0 w-full z-40 transition-all duration-300",
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-xs"
+          : "bg-transparent",
+        isVisible ? "translate-y-0" : "-translate-y-full"
       )}
     >
-      <div className="container flex items-center justify-between">
-        <a
-          className="text-xl font-bold text-primary flex items-center"
-          href="#hero"
-        >
-          <span className="relative z-10">
-            <span className="text-glow text-foreground"> B K </span>{" "}
-            PRIYANKA
-          </span>
+      <div className="container flex items-center justify-between py-4">
+        {/* Logo */}
+        <a href="#hero" className="text-xl font-bold text-primary">
+          <span className="text-glow text-foreground">B K</span> PRIYANKA
         </a>
 
-        {/* desktop nav */}
-        <div className="hidden md:flex space-x-8">
-          {navItems.map((item, key) => (
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center space-x-8">
+          {navItems.map((item) => (
             <a
-              key={key}
+              key={item.name}
               href={item.href}
-              className="text-foreground/80 hover:text-primary transition-colors duration-300"
+              className="text-foreground/80 hover:text-primary transition"
             >
               {item.name}
             </a>
           ))}
-          <ThemeToggle /> 
+          <ThemeToggle />
         </div>
 
-        {/* mobile nav */}
+        {/* Mobile controls */}
+        <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
 
-        <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-50"
-          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}{" "}
-        </button>
-
+        {/* Mobile menu */}
         <div
           className={cn(
-            "fixed inset-0 bg-background/95 backdroup-blur-md z-40 flex flex-col items-center justify-center",
+            "fixed inset-x-0 top-16 bottom-0 bg-background/90 backdrop-blur-md",
             "transition-all duration-300 md:hidden",
-            isMenuOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
+            isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
         >
-          <div className="flex flex-col space-y-8 text-xl">
-            {navItems.map((item, key) => (
+          <div className="flex flex-col items-center justify-center h-full gap-8 text-xl">
+            {navItems.map((item) => (
               <a
-                key={key}
+                key={item.name}
                 href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors duration-300"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
