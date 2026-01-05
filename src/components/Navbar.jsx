@@ -83,7 +83,7 @@ export const Navbar = () => {
         {/* Mobile menu */}
         <div
           className={cn(
-            "fixed inset-x-0 top-16 bottom-0 bg-background/90 backdrop-blur-md",
+            "fixed inset-x-0 top-55 bottom-0 bg-background/90 backdrop-blur-md",
             "transition-all duration-300 md:hidden",
             isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
