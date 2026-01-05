@@ -6,7 +6,7 @@ export const ProjectsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/projects")
+    fetch("https://backend-p-mmsw.onrender.com/projects")
       .then((res) => res.json())
       .then((data) => {
         setProjects(data);
