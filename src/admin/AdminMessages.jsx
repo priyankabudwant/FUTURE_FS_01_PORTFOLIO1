@@ -8,7 +8,7 @@ export const AdminMessages = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchMessages = async () => {
-    const res = await fetch("http://localhost:5000/api/messages");
+    const res = await fetch("https://backend-p-mmsw.onrender.com/api/messages");
     const data = await res.json();
     setMessages(data);
     setLoading(false);
