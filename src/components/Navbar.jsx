@@ -69,7 +69,7 @@ export const Navbar = () => {
               {item.name}
             </a>
           ))}
-          <ThemeToggle />
+          
         </div>
 
         {/* Mobile controls */}
